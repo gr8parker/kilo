@@ -158,12 +158,16 @@ void editorDrawRows(struct abuf *ab) {
 		      
 void editorRefreshScreen() {
     struct abuf ab = ABUF_INIT;
+    
+    abAppend(&ab, "\x1b[?25l", 6);
 	abAppend(&ab, "\x1b[2J", 4); // clean screen VT1000 <esc>-sequences
 	abAppend(&ab, "\x1b[H",3); // draw the editor interface from top to bottom
 
 	editorDrawRows(&ab);
 
 	abAppend(&ab, "\x1b[H", 3);
+    abAppend(&ab, "\x1b[?25h", 6);
+    
     write(STDOUT_FILENO, ab.b, ab.len);
     abFree(&ab);
 }
